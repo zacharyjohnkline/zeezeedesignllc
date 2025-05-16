@@ -197,38 +197,33 @@ function listening(event) {
 }
 
 function listenEventMobile(event) {
-  //If there is evidence of a scroll
   if (initialY !== null) {
-    // Capture client touches and store length in yPos variable
     const currentY = event.touches[0].clientY;
     const yPos = currentY - initialY;
-    //
-    if (yPos > 0 && listeningToWheel) {
-      if (page <= 0) {
-        page = 1;
-      }
-      page--;
-      console.log("hello3a", yPos, page);
-      listeningToWheel = false;
-      slideInOut("right", pageArray);
-      setTimeout(() => {
-        listeningToWheel = true;
-      }, 1000);
-    } else if (yPos < 0 && listeningToWheel) {
-      if (page >= pageArray.length - 1) {
-        console.log("hello5");
-      } else {
-        page++;
-        console.log("hello4", yPos, page);
-        listeningToWheel = false;
-        slideInOut("left", pageArray);
-        setTimeout(() => {
-          listeningToWheel = true;
-        }, 1000);
-      }
-    }
 
-    initialY = currentY; // Update for next touchmove
+    // Avoid accidental flickers — set a threshold
+    const swipeThreshold = 30;
+
+    if (Math.abs(yPos) > swipeThreshold) {
+      event.preventDefault(); // 🔒 Block pull-to-refresh if swipe is real
+
+      if (yPos > 0 && listeningToWheel) {
+        if (page <= 0) page = 1;
+        page--;
+        listeningToWheel = false;
+        slideInOut("right", pageArray);
+        setTimeout(() => (listeningToWheel = true), 1000);
+      } else if (yPos < 0 && listeningToWheel) {
+        if (page < pageArray.length - 1) {
+          page++;
+          listeningToWheel = false;
+          slideInOut("left", pageArray);
+          setTimeout(() => (listeningToWheel = true), 1000);
+        }
+      }
+
+      initialY = currentY;
+    }
   }
 }
 
@@ -248,7 +243,7 @@ function goHome() {
 function listener() {
   window.addEventListener("wheel", listening);
   window.addEventListener("touchstart", handleTouchStart);
-  window.addEventListener("touchmove", listenEventMobile);
+  window.addEventListener("touchmove", listenEventMobile, { passive: false });
 }
 
 //INITIALIZE THE WHEEL LISTENER
