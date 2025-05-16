@@ -1,0 +1,390 @@
+@font-face {
+  font-family: "MyriadPro-SemiboldItalic";
+  src: url("myriad_pro/MyriadPro-SemiboldIt.otf") format("opentype");
+  font-style: normal;
+}
+@font-face {
+  font-family: "MyriadPro-Regular";
+  src: url("myriad_pro/MyriadPro-Regular.otf") format("opentype");
+  font-style: normal;
+}
+@font-face {
+  font-family: "MyriadPro-Light";
+  src: url("myriad_pro/MyriadPro-Light.otf") format("opentype");
+  font-style: normal;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  width: 100vw;
+  height: 100vh;
+}
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1.5fr 0.5fr 1fr;
+  overflow-x: hidden;
+}
+#zeezee {
+  align-self: last baseline;
+}
+#zee-top {
+  font-size: calc(130px + 50 * ((100vw - 320px) / 680));
+  line-height: calc(80px + 30 * ((100vw - 320px) / 680));
+  font-family: "MyriadPro-SemiboldItalic";
+}
+#zee-bot {
+  font-size: calc(130px + 50 * ((100vw - 320px) / 680));
+  line-height: calc(80px + 30 * ((100vw - 320px) / 680));
+  font-family: "MyriadPro-SemiboldItalic";
+}
+.current-service {
+  /* position: relative;
+  align-self: center; */
+  width: -webkit-fill-available;
+  height: calc(130px + 60 * ((100vw - 320px) / 680));
+  background-color: black;
+  display: flex;
+  align-items: center;
+}
+#current-service {
+  position: relative;
+  left: 5px;
+  font-size: calc(130px + 50 * ((100vw - 320px) / 680));
+  color: white;
+  font-family: "MyriadPro-Light";
+  transition: left 0.15s;
+}
+.top-container {
+  position: relative;
+  left: 0;
+  transition: opacity 0.15s;
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.tagline {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  /* background-color: blue; */
+  font-family: "MyriadPro-Regular";
+  font-size: calc(16px + 5 * ((100vw - 320px) / 680));
+}
+#tagline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: opacity 0.15s;
+  transform: translate(-50%, -50%);
+}
+.list-item{
+  cursor: pointer;
+}
+.list-item:hover{
+  background-color: black;
+  color: white;
+}
+#list {
+  position: absolute;
+  z-index: 5;
+  top: 5%;
+  right: 10px;
+  list-style-type: none;
+  text-align: right;
+  font-family: "MyriadPro-Light";
+  font-size: calc(30px + 3 * ((100vw - 320px) / 680));
+  color: gray;
+}
+.banner-image {
+  width: 100%;
+  object-fit: cover;
+}
+#corner-logo {
+  cursor: pointer;
+  color: #ffffff;
+  padding: 10px;
+  background-color: black;
+  position: absolute;
+  z-index: 15;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  font-family: "MyriadPro-SemiboldItalic";
+  font-size: calc(40px + 5 * ((100vw - 320px) / 680));
+  line-height: 30px;
+}
+.case-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 100%;
+  width: 100%;
+}
+.case-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0 0;
+  box-shadow: -10px 0px 10px #00000035;
+  transition: 0.15s;
+}
+.case-image:hover {
+  position: absolute;
+  width: 100%;
+  object-fit: cover;
+  object-position: 0 0;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transition: 0.15s;
+}
+.selling-points{
+  justify-self: center;
+}
+.sp-list-item {
+  width: calc(100px + 200 * ((100vw - 320px) / 680));
+  list-style-type: disc;
+  list-style: circle;
+  margin: 10px 0px;
+  font-family: 'MyriadPro-Light';
+  font-size: calc(20px + 5 * ((100vw - 320px) / 680));
+}
+.location-top{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  overflow: hidden;
+}
+#location-image-container{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#location-image{
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 896px) {
+  #location-image{
+    height: 100%;
+    object-fit: cover;
+  }
+}
+@media (min-width: 896px) {
+  #location-image{
+    width: 100%;
+    object-fit: cover;
+  }
+}
+#email-form-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;;
+}
+#email-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#email-form label{
+  color: white;
+  display: flex;
+  align-items: center;
+  font-family: 'MyriadPro-Light';
+  gap: 10px;
+  font-size: 20px;
+}
+#email-form input{
+  font-family: 'MyriadPro-Light';
+  width: 60%;
+  padding: 10px;
+}
+#details-field{
+  width: 60%;
+  margin-top: 10px;
+  height: 300px;
+  padding: 10px;
+  font-family: 'MyriadPro-Light';
+}
+#email-field{
+  height: 30px;
+}
+#email-button{
+  font-family: 'MyriadPro-Light';
+  position: absolute;
+  top: 80%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 10px;
+  color: black;
+  font-size: 20px;
+}
+#email-button:hover{
+  background-color: gray;
+  color: white;
+}
+
+/* Case Study classes and ids */
+.client-title {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+  width: 100vw;
+  font-family: "MyriadPro-Light";
+  font-size: calc(40px + 40 * ((100vw - 320px) / 680));
+  background-color: black;
+  color: white;
+  box-shadow: 0px 10px 10px #00000035;
+  padding: 0px 20px 0px 20px;
+}
+.client-banner {
+  width: 100vw;
+  height: 400px;
+  object-fit: cover;
+  object-position: 0 0;
+}
+.exit {
+  color: #ffffff70;
+  font-size: calc(30px + 10 * ((100vw - 320px) / 680));
+  align-self: center;
+}
+.exit:hover {
+  color: white;
+  cursor: pointer;
+}
+.sample-banner {
+  position: relative;
+  z-index: 4;
+  width: 100vw;
+  height: 300px;
+  object-fit: cover;
+}
+.image-text {
+  width: 100vw;
+  padding-top: 0;
+  text-align: center;
+  margin-top: calc(10px + 30 * ((100vw - 320px) / 680));
+  margin-bottom: calc(10px + 30 * ((100vw - 320px) / 680));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+  /* background-color: blue; */
+  /* overflow: hidden; */
+}
+.text-image {
+  width: 100vw;
+  padding: 0;
+  text-align: center;
+  margin-top: calc(10px + 30 * ((100vw - 320px) / 680));
+  margin-bottom: calc(10px + 30 * ((100vw - 320px) / 680));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 300px;
+  /* background-color: red; */
+  /* overflow: hidden; */
+}
+.primary-titles {
+  position: relative;
+  z-index: 4;
+  font-family: "MyriadPro-SemiboldItalic";
+  font-size: calc(40px + 30 * ((100vw - 320px) / 680));
+  padding: 20px;
+  width: 100vw;
+  text-align: center;
+  background-color: white;
+}
+.primary-titles::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  top: -100px;
+  left: 0;
+  width: 100vw;
+  height: 100px;
+  background-image: linear-gradient(0deg, #ffffff, #ffffff00);
+}
+.primary-titles2 {
+  position: relative;
+  z-index: 4;
+  font-family: "MyriadPro-SemiboldItalic";
+  font-size: calc(40px + 30 * ((100vw - 320px) / 680));
+  padding-top: calc(0px + 60 * ((100vw - 320px) / 680));
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  width: 100vw;
+  text-align: center;
+}
+.secondary-titles {
+  text-align: center;
+  font-family: "MyriadPro-Light";
+  font-size: calc(30px + 10 * ((100vw - 320px) / 680));
+  padding: 20px;
+  width: 150%;
+}
+.half-image {
+  width: 110%;
+  height: calc(300px + 50 * ((100vw - 320px) / 680));
+  object-fit: scale-down;
+}
+.half-text {
+  height: calc(300px + 50 * ((100vw - 320px) / 680));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  width: 90%;
+  justify-self: center;
+}
+.paragraphs {
+  font-family: "MyriadPro-Light";
+  font-size: calc(20px + 5 * ((100vw - 320px) / 680));
+  padding: calc(0px + 10 * ((100vw - 320px) / 680));
+}
+.paragraphs2 {
+  font-family: "MyriadPro-Light";
+  text-align: center;
+  font-size: calc(20px + 5 * ((100vw - 320px) / 680));
+  padding: 10%;
+}
+.client-description {
+  font-family: "MyriadPro-Light";
+  position: absolute;
+  padding: 10px;
+  border-radius: 10px;
+  top: calc(200px + 90 * ((100vw - 320px) / 680));
+  left: 50%;
+  z-index: 10;
+  transform: translateX(-50%);
+  width: 80vw;
+  text-align: center;
+  background-color: #00000070;
+  color: white;
+  font-size: calc(20px + 10 * ((100vw - 320px) / 680));
+}
+
