@@ -15,10 +15,12 @@
 //DEFINE UNIVERSAL VARIABLES
 const container = document.querySelector(".container");
 const containerHTML = homeHTML + homeTagline;
+const header = document.head;
 container.innerHTML = containerHTML;
 
 //POSITION KEEPS TRACK OF THE WHEEL EVENT
 let position = 1500;
+let initialY = undefined;
 
 //PAGE KEEPS TRACK OF WHICH PAGE IS CURRENTLY DISPLAYED
 let page = 0;
@@ -42,14 +44,15 @@ function goBack() {
   pageArray = scrollPages;
   container.style.gridTemplateRows = "1.5fr 0.5fr 1fr";
   container.innerHTML = containerHTML;
-  const [topContainer, service, tagline]=[...defineVariables()];
-  let pageHTML = `<div id="corner-logo" onclick="goHome()>
+  const [topContainer, service, tagline] = [...defineVariables()];
+  let pageHTML =
+    `<div id="corner-logo" onclick="goHome()>
         <p>zee</p>
         <p>zee</p>
     </div>
     ` + pageArray[4].content;
-    console.log(pageHTML);
-  topContainer.innerHTML=pageHTML;
+  console.log(pageHTML);
+  topContainer.innerHTML = pageHTML;
   console.log(topContainer.innerHTML);
   service.innerText = pageArray[4].name;
   tagline.innerText = pageArray[4].tagline;
@@ -60,37 +63,45 @@ function goBack() {
 }
 
 //SEND EMAIL
-function sendEmail(event){
+function sendEmail(event) {
   event.preventDefault();
-  const [email, details] = [document.getElementById('email-field'), document.getElementById("details-field")]
+  const [email, details] = [
+    document.getElementById("email-field"),
+    document.getElementById("details-field"),
+  ];
   console.log(email.value, details.value);
 }
 
 //ADDS STYLE TO PAGE TRANSITIONS
 function slideInOut(direction, array) {
-  const [topContainer, service, tagline, currentServiceContainer]=[...defineVariables()];
-  if(array === scrollPages2){
-    service.style.fontSize = 'calc(80px + 50 * ((100vw - 320px) / 680))';
-  }else{
-    service.style.fontSize = 'calc(130px + 50 * ((100vw - 320px) / 680))';
+  const [topContainer, service, tagline, currentServiceContainer] = [
+    ...defineVariables(),
+  ];
+  if (array === scrollPages2) {
+    service.style.fontSize = "calc(80px + 50 * ((100vw - 320px) / 680))";
+  } else {
+    service.style.fontSize = "calc(130px + 50 * ((100vw - 320px) / 680))";
   }
-  pageArray = array
+  pageArray = array;
   let pageHTML = `<div id="corner-logo" onclick="goHome()">
         <p>zee</p>
         <p>zee</p>
     </div>
     ${array[page].content}`;
-    if(array[page].bgColor){
-      currentServiceContainer.style.backgroundColor = 'white';
-      service.style.color = 'black';
-      container.style.backgroundColor = 'black';
-      tagline.style.color = 'white';
-    }else{
-      tagline.style.color = 'black';
-      container.style.backgroundColor = 'white';
-      currentServiceContainer.style.backgroundColor = 'black';
-      service.style.color = 'white';
-    }
+  if (array[page].form) {
+    console.log("there is a form on this page");
+  }
+  if (array[page].bgColor) {
+    currentServiceContainer.style.backgroundColor = "white";
+    service.style.color = "black";
+    container.style.backgroundColor = "black";
+    tagline.style.color = "white";
+  } else {
+    tagline.style.color = "black";
+    container.style.backgroundColor = "white";
+    currentServiceContainer.style.backgroundColor = "black";
+    service.style.color = "white";
+  }
   //sliding in left
   if (direction === "left") {
     service.style.left = "-100vw";
@@ -136,10 +147,15 @@ function slideInOut(direction, array) {
   }
 }
 
+function handleTouchStart(event) {
+  initialY = event.touches[0].clientY; // Store initial Y position
+  // console.log(initialY);
+}
+
 //DEFINE MECHANICS OF THE WHEEL EVENT LISTENER
 function listening(event) {
   console.log(page);
-  if(page === 0){
+  if (page === 0) {
     pageArray = scrollPages;
   }
   let deltaY = event.wheelDeltaY;
@@ -180,14 +196,50 @@ function listening(event) {
   }
 }
 
+function listenEventMobile(event) {
+  //If there is evidence of a scroll
+  if (initialY !== null) {
+    // Capture client touches and store length in yPos variable
+    const currentY = event.touches[0].clientY;
+    const yPos = currentY - initialY;
+    //
+    if (yPos > 0 && listeningToWheel) {
+      if (page <= 0) {
+        page = 1;
+      }
+      page--;
+      console.log("hello3a", yPos, page);
+      listeningToWheel = false;
+      slideInOut("right", pageArray);
+      setTimeout(() => {
+        listeningToWheel = true;
+      }, 1000);
+    } else if (yPos < 0 && listeningToWheel) {
+      if (page >= pageArray.length - 1) {
+        console.log("hello5");
+      } else {
+        page++;
+        console.log("hello4", yPos, page);
+        listeningToWheel = false;
+        slideInOut("left", pageArray);
+        setTimeout(() => {
+          listeningToWheel = true;
+        }, 1000);
+      }
+    }
+
+    initialY = currentY; // Update for next touchmove
+  }
+}
+
 //SERVICE PAGE
-function servicePage(event){
+function servicePage(event) {
   let servicePage = event.target.id;
   page = servicePage;
   slideInOut("left", scrollPages2);
 }
 
-function goHome(){
+function goHome() {
   page = 0;
   slideInOut("right", scrollPages);
 }
@@ -195,6 +247,8 @@ function goHome(){
 //APPLY WHEEL EVENT
 function listener() {
   window.addEventListener("wheel", listening);
+  window.addEventListener("touchstart", handleTouchStart);
+  window.addEventListener("touchmove", listenEventMobile);
 }
 
 //INITIALIZE THE WHEEL LISTENER
