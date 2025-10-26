@@ -3,7 +3,7 @@ const scrollPages = [
     {
       name: "design",
       content: homeHTML,
-      tagline: "Turn your packaging concepts into reality.",
+      tagline: "Turn your packaging concepts into reality.<br><br>Scroll to see our process!",
     },
     {
       name: "print",
@@ -63,7 +63,7 @@ const scrollPages = [
                             <p id='email-status' role='status' aria-live='polite'></p>
                         </form>
                     </div>`,
-        tagline: 'Send us a message, and we would love to talk to you about how we can partner with you to bring your concepts to the shelf!',
+        tagline: 'Send us a message, and we would love to talk to you about how we can partner with you to bring your concepts to the shelf!<br><br>Phone: (732)814-8561',
         bgColor: 'white',
         color: 'black',
     }
