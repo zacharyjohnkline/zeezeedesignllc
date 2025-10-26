@@ -119,10 +119,7 @@ const weveel = `<div class="client-title">
         id="weveel-tradeshow"
       />
       <p class="paragraphs2">
-        We did to-scale 3D renders for several of WeVeels tradeshow booths to
-        assist the design team in the design of their tradeshow displays, and
-        then to visualize what the end result would look like after the design
-        of the booth had been completed.
+        We created to‑scale 3D renders for several of WeVeel’s trade‑show booths to assist the design team with layout and to visualize what the final booth would look like after design completion.
       </p>
       <p class="primary-titles2">Custom Adobe Scripts</p>
       <img
@@ -132,9 +129,5 @@ const weveel = `<div class="client-title">
         id="weveel-scripts"
       />
       <p class="paragraphs2">
-        We created custom adobe illustrator scripts to create dielines for their
-        cdus, boxes, adding measurements to mechanical files, and for adding
-        internal file information for all of their working files. These scripts
-        have saced them countless hours every week, and been invaluable in their
-        design and production process.
+        We created custom Adobe Illustrator scripts to generate dielines for their CDUs and boxes, add measurements to mechanical files, and embed internal file information across their working files. These scripts have saved them countless hours every week and have been invaluable to their design and production process.
       </p>`;

@@ -15,12 +15,10 @@
 //DEFINE UNIVERSAL VARIABLES
 const container = document.querySelector(".container");
 const containerHTML = homeHTML + homeTagline;
-const header = document.head;
 container.innerHTML = containerHTML;
 
 //POSITION KEEPS TRACK OF THE WHEEL EVENT
 let position = 1500;
-let initialY = undefined;
 
 //PAGE KEEPS TRACK OF WHICH PAGE IS CURRENTLY DISPLAYED
 let page = 0;
@@ -40,68 +38,152 @@ function defineVariables() {
 }
 
 //FROM AN INDIVIDUAL CASE STUDY TO THE CASE STUDY PAGE
+// Replace your current goBack() with this:
 function goBack() {
-  pageArray = scrollPages;
-  container.style.gridTemplateRows = "1.5fr 0.5fr 1fr";
-  container.innerHTML = containerHTML;
-  const [topContainer, service, tagline] = [...defineVariables()];
-  let pageHTML =
-    `<div id="corner-logo" onclick="goHome()>
-        <p>zee</p>
-        <p>zee</p>
+  // 1) Always re-select live nodes (avoid stale refs)
+  const root = document.querySelector('.container');
+  if (!root) {
+    console.error('[goBack] .container not found');
+    return;
+  }
+  root.style.display = "grid";
+  root.style.gridTemplateRows = "1.5fr 0.5fr 1fr";
+
+  // 2) Restore the base home structure
+  //    (containerHTML should be your saved initial markup for the home view)
+  root.innerHTML = containerHTML;
+
+  // 3) Restore grid rows (guarded)
+  if (root && root.style) {
+    root.style.gridTemplateRows = "1.5fr 0.5fr 1fr";
+  }
+
+  // 4) Rebind the per-view elements now that DOM is rebuilt
+  //    defineVariables() should return [topContainer, service, tagline]
+  const [topContainer, service, tagline] = defineVariables();
+
+  // 5) Inject the CASES page content (index 4) into the right place
+  const cases = scrollPages[4];            // name/content/tagline live here
+  const pageHTML = `
+    <div id="corner-logo" onclick="goHome()">
+      <p>pivot</p><p>CPG</p>
     </div>
-    ` + pageArray[4].content;
-  console.log(pageHTML);
+    ${cases.content}
+  `;
   topContainer.innerHTML = pageHTML;
-  console.log(topContainer.innerHTML);
-  service.innerText = pageArray[4].name;
-  tagline.innerText = pageArray[4].tagline;
+  service.innerText = cases.name;
+  tagline.innerText = cases.tagline;
+
+  // 6) Reset nav state
+  pageArray = scrollPages;
   page = 4;
   listeningToWheel = true;
   position = 1500;
+  const grid = document.querySelector(".case-images");
+  const indFrames = document.querySelectorAll('.case-frame');
+  const framesArray = Array.from(indFrames);
+  for (let i = 0; i < framesArray.length; i++) {
+    framesArray[i].addEventListener('mouseenter', () => {
+      console.log(`hovering!${framesArray[i]}`);
+      grid.classList = "case-images";
+      grid.classList.add(`case-images${i+1}`);
+    });
+  }
+  grid.addEventListener("mouseleave", () => {
+    grid.classList = "case-images";
+  })
+
+  // 7) Cleanly reattach the wheel listener
+  try { window.removeEventListener('wheel', listening); } catch (e) {}
   listener();
 }
 
+
 //SEND EMAIL
-function sendEmail(event) {
-  event.preventDefault();
-  const [email, details] = [
-    document.getElementById("email-field"),
-    document.getElementById("details-field"),
-  ];
-  console.log(email.value, details.value);
-}
+(function initEmailForm(){
+  document.addEventListener('submit', async function(e){
+    const form = e.target;
+    if (form && form.id === 'email-form') {
+      e.preventDefault();
+      const emailInput = document.getElementById('email-field');
+      const detailsInput = document.getElementById('details-field');
+      const statusEl = document.getElementById('email-status');
+
+      // Basic validation
+      const email = (emailInput?.value || '').trim();
+      const details = (detailsInput?.value || '').trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!emailOk) {
+        if (statusEl) { statusEl.textContent = 'Please enter a valid email address.'; statusEl.className = 'error'; }
+        emailInput?.focus();
+        return;
+      }
+      if (!details) {
+        if (statusEl) { statusEl.textContent = 'Please include a short message.'; statusEl.className = 'error'; }
+        detailsInput?.focus();
+        return;
+      }
+
+      // Disable UI while sending
+      const btn = document.getElementById('email-button');
+      const prev = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = ''; }
+
+      try {
+        // Replace with your Formspree endpoint (create one and paste it here)
+        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnjvrpg';
+        const payload = { email, message: details };
+
+        const resp = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (resp.ok) {
+          if (statusEl) { statusEl.textContent = 'Thanks! Your message has been sent.'; statusEl.className = 'ok'; }
+          if (form) form.reset();
+        } else {
+          const data = await resp.json().catch(() => ({}));
+          const err = data?.error || data?.message || resp.statusText || 'Something went wrong.';
+          if (statusEl) { statusEl.textContent = 'Unable to send right now: ' + err; statusEl.className = 'error'; }
+        }
+      } catch (err) {
+        if (statusEl) { statusEl.textContent = 'Network error. Please try again.'; statusEl.className = 'error'; }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = prev || 'send'; }
+      }
+    }
+  }, true);
+})();
 
 //ADDS STYLE TO PAGE TRANSITIONS
 function slideInOut(direction, array) {
-  const [topContainer, service, tagline, currentServiceContainer] = [
-    ...defineVariables(),
-  ];
-  if (array === scrollPages2) {
-    service.style.fontSize = "calc(80px + 50 * ((100vw - 320px) / 680))";
-  } else {
-    service.style.fontSize = "calc(130px + 50 * ((100vw - 320px) / 680))";
+  const [topContainer, service, tagline, currentServiceContainer]=[...defineVariables()];
+  if(array === scrollPages2){
+    service.style.fontSize = 'calc(80px + 50 * ((100vw - 320px) / 680))';
+  }else{
+    service.style.fontSize = 'calc(130px + 50 * ((100vw - 320px) / 680))';
   }
-  pageArray = array;
+  pageArray = array
   let pageHTML = `<div id="corner-logo" onclick="goHome()">
-        <p>zee</p>
-        <p>zee</p>
+        <p>pivot</p>
+        <p>CPG</p>
     </div>
     ${array[page].content}`;
-  if (array[page].form) {
-    console.log("there is a form on this page");
-  }
-  if (array[page].bgColor) {
-    currentServiceContainer.style.backgroundColor = "white";
-    service.style.color = "black";
-    container.style.backgroundColor = "black";
-    tagline.style.color = "white";
-  } else {
-    tagline.style.color = "black";
-    container.style.backgroundColor = "white";
-    currentServiceContainer.style.backgroundColor = "black";
-    service.style.color = "white";
-  }
+    if(array[page].bgColor){
+      currentServiceContainer.style.backgroundColor = 'white';
+      service.style.color = 'black';
+      container.style.backgroundColor = 'black';
+      tagline.style.color = 'white';
+    }else{
+      tagline.style.color = 'black';
+      container.style.backgroundColor = 'white';
+      currentServiceContainer.style.backgroundColor = 'black';
+      service.style.color = 'white';
+    }
   //sliding in left
   if (direction === "left") {
     service.style.left = "-100vw";
@@ -145,17 +227,30 @@ function slideInOut(direction, array) {
       }, 150);
     }, 50);
   }
-}
+  if(page == 4){
+    setTimeout(() => {
+    const grid = document.querySelector(".case-images");
+    const indFrames = document.querySelectorAll('.case-frame');
+    const framesArray = Array.from(indFrames);
+    for (let i = 0; i < framesArray.length; i++) {
+      framesArray[i].addEventListener('mouseenter', () => {
+        console.log(`hovering!${framesArray[i]}`);
+        grid.classList = "case-images";
+        grid.classList.add(`case-images${i+1}`);
+      });
+    }
+    grid.addEventListener("mouseleave", () => {
+      grid.classList = "case-images";
+    })
+  }, 210);
 
-function handleTouchStart(event) {
-  initialY = event.touches[0].clientY; // Store initial Y position
-  // console.log(initialY);
+  }
 }
 
 //DEFINE MECHANICS OF THE WHEEL EVENT LISTENER
 function listening(event) {
-  console.log(page);
-  if (page === 0) {
+  // console.log(page);
+  if(page === 0){
     pageArray = scrollPages;
   }
   let deltaY = event.wheelDeltaY;
@@ -196,54 +291,68 @@ function listening(event) {
   }
 }
 
-function listenEventMobile(event) {
-  if (initialY !== null) {
-    const currentY = event.touches[0].clientY;
-    const yPos = currentY - initialY;
-
-    // Avoid accidental flickers — set a threshold
-    const swipeThreshold = 30;
-
-    if (Math.abs(yPos) > swipeThreshold) {
-      event.preventDefault(); // 🔒 Block pull-to-refresh if swipe is real
-
-      if (yPos > 0 && listeningToWheel) {
-        if (page <= 0) page = 1;
-        page--;
-        listeningToWheel = false;
-        slideInOut("right", pageArray);
-        setTimeout(() => (listeningToWheel = true), 1000);
-      } else if (yPos < 0 && listeningToWheel) {
-        if (page < pageArray.length - 1) {
-          page++;
-          listeningToWheel = false;
-          slideInOut("left", pageArray);
-          setTimeout(() => (listeningToWheel = true), 1000);
-        }
-      }
-
-      initialY = currentY;
-    }
-  }
-}
-
 //SERVICE PAGE
-function servicePage(event) {
+function servicePage(event){
   let servicePage = event.target.id;
   page = servicePage;
   slideInOut("left", scrollPages2);
+  try{ removeScrollInputs(); }catch(e){};
+  addScrollInputs();
 }
 
-function goHome() {
+function goHome(){
   page = 0;
   slideInOut("right", scrollPages);
 }
 
+
+// === Touch + Unified Scroll Support ===
+let touchStartY = 0;
+let touchStartX = 0;
+let lastTouchY = 0;
+const SWIPE_Y_THRESHOLD = 28;
+const SWIPE_X_TOLERANCE = 22;
+const TOUCH_GAIN = 45;
+
+function onWheel(e){
+  // Delegate to existing logic
+  listening(e);
+}
+
+function onTouchStart(e){
+  if(!e.touches || e.touches.length === 0) return;
+  touchStartY = lastTouchY = e.touches[0].clientY;
+  touchStartX = e.touches[0].clientX;
+}
+
+function onTouchMove(e){
+  if(!e.touches || e.touches.length === 0) return;
+  const y = e.touches[0].clientY;
+  const x = e.touches[0].clientX;
+  const absX = Math.abs(x - touchStartX);
+  const absY = Math.abs(y - touchStartY);
+  if (absX > SWIPE_X_TOLERANCE && absX > absY) return; // ignore horizontal
+  const dy = (lastTouchY - y);
+  lastTouchY = y;
+  if (Math.abs(y - touchStartY) < SWIPE_Y_THRESHOLD) return;
+  // Feed synthetic delta into your existing logic
+  listening({ wheelDeltaY: dy * TOUCH_GAIN });
+  try { e.preventDefault(); } catch(_) {}
+}
+
+function addScrollInputs(){
+  window.addEventListener('wheel', onWheel, { passive: true });
+  window.addEventListener('touchstart', onTouchStart, { passive: true });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+}
+function removeScrollInputs(){
+  window.removeEventListener('wheel', onWheel);
+  window.removeEventListener('touchstart', onTouchStart);
+  window.removeEventListener('touchmove', onTouchMove);
+}
 //APPLY WHEEL EVENT
-function listener() {
-  window.addEventListener("wheel", listening);
-  window.addEventListener("touchstart", handleTouchStart);
-  window.addEventListener("touchmove", listenEventMobile, { passive: false });
+function listener(){
+  addScrollInputs();
 }
 
 //INITIALIZE THE WHEEL LISTENER

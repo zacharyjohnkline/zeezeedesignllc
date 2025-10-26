@@ -31,17 +31,19 @@ html {
   display: grid;
   grid-template-rows: 1.5fr 0.5fr 1fr;
   overflow-x: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-y;
 }
 #zeezee {
-  align-self: last baseline;
+  align-self: flex-end;
 }
 #zee-top {
-  font-size: calc(130px + 50 * ((100vw - 320px) / 680));
+  font-size: calc(110px + 50 * ((100vw - 320px) / 680));
   line-height: calc(80px + 30 * ((100vw - 320px) / 680));
   font-family: "MyriadPro-SemiboldItalic";
 }
 #zee-bot {
-  font-size: calc(130px + 50 * ((100vw - 320px) / 680));
+  font-size: calc(100px + 50 * ((100vw - 320px) / 680));
   line-height: calc(80px + 30 * ((100vw - 320px) / 680));
   font-family: "MyriadPro-SemiboldItalic";
 }
@@ -120,17 +122,44 @@ html {
   right: 10px;
   z-index: 4;
   font-family: "MyriadPro-SemiboldItalic";
-  font-size: calc(40px + 5 * ((100vw - 320px) / 680));
+  font-size: calc(25px + 5 * ((100vw - 320px) / 680));
   line-height: 30px;
 }
+/* .case-images {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  transition: grid-template-columns 0.3s ease;
+} */
+
 .case-images {
   position: absolute;
   top: 0;
   left: 0;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   height: 100%;
   width: 100%;
+  transition: .25s;
+}
+.case-images1{
+  transition: .25s;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+.case-images2{
+  transition: .25s;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+}
+.case-images3{
+  transition: .25s;
+  grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
+}
+.case-images4{
+  transition: .25s;
+  grid-template-columns: 1fr 1fr 1fr 2fr 1fr;
+}
+.case-images5{
+  transition: .25s;
+  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
 }
 .case-image {
   width: 100%;
@@ -138,9 +167,10 @@ html {
   object-fit: cover;
   object-position: 0 0;
   box-shadow: -10px 0px 10px #00000035;
-  transition: 0.15s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.case-image:hover {
+
+/* .case-image:hover {
   position: absolute;
   width: 100%;
   object-fit: cover;
@@ -149,7 +179,14 @@ html {
   left: 0;
   z-index: 2;
   transition: 0.15s;
-}
+} */
+
+/* .case-image:hover {
+  transform: scale(1.25);
+  z-index: 2;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+} */
+
 .selling-points{
   justify-self: center;
 }
@@ -159,7 +196,7 @@ html {
   list-style: circle;
   margin: 10px 0px;
   font-family: 'MyriadPro-Light';
-  font-size: calc(20px + 5 * ((100vw - 320px) / 680));
+  font-size: calc(15px + 5 * ((100vw - 320px) / 680));
 }
 .location-top{
   display: grid;
@@ -170,9 +207,15 @@ html {
 #location-image-container{
   width: 100%;
   height: 100%;
+  /* display: grid;
+  grid-template-rows: 1fr 1fr; */
   overflow: hidden;
 }
-#location-image{
+#location-image1{
+  height: 100%;
+  width: auto;
+}
+#location-image2{
   width: 100%;
   height: auto;
 }
@@ -218,7 +261,7 @@ html {
 #details-field{
   width: 60%;
   margin-top: 10px;
-  height: 300px;
+  height: calc(150px + 150 * ((100vw - 320px) / 680));
   padding: 10px;
   font-family: 'MyriadPro-Light';
 }
@@ -249,21 +292,24 @@ html {
 .client-title {
   position: relative;
   display: flex;
+  z-index: 10;
   justify-content: space-between;
-  z-index: 2;
+  align-items: center;        /* keeps text vertically aligned */
   width: 100vw;
   font-family: "MyriadPro-Light";
   font-size: calc(40px + 40 * ((100vw - 320px) / 680));
   background-color: black;
   color: white;
   box-shadow: 0px 10px 10px #00000035;
-  padding: 0px 20px 0px 20px;
+  padding: 10px 20px;         /* instead of only left/right padding */
+  height: calc(60px + 40 * ((100vw - 320px) / 680));               /* <<< FIXED HEIGHT */
 }
 .client-banner {
   width: 100vw;
   height: 400px;
   object-fit: cover;
   object-position: 0 0;
+  opacity: .5;
 }
 .exit {
   color: #ffffff70;
@@ -304,6 +350,8 @@ html {
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 300px;
+  justify-content: center;
+  align-items: center;
   /* background-color: red; */
   /* overflow: hidden; */
 }
@@ -383,8 +431,85 @@ html {
   transform: translateX(-50%);
   width: 80vw;
   text-align: center;
-  background-color: #00000070;
+  background-color: #000000;
   color: white;
   font-size: calc(20px + 10 * ((100vw - 320px) / 680));
 }
+
+
+
+/* Accessibility: ensure focus visibility for interactive elements */
+#corner-logo:focus-visible,
+.list-item:focus-visible,
+.case-image:focus-visible,
+#email-button:focus-visible {
+  outline: 3px solid #007aff;
+  outline-offset: 3px;
+}
+
+/* Provide fallbacks for Myriad Pro */
+body {
+  font-family: "MyriadPro-Regular", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+
+/* --- Email form contrast fixes --- */
+#email-form-container label {
+  color: #111;
+}
+
+#email-status {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 10px;        /* warm highlight visible on dark or light */
+  color: white;
+  min-height: 1.25rem;
+  line-height: 1.25rem;
+}
+
+#email-status.ok {
+  color: #acf2bd;
+}
+
+#email-status.error {
+  color: #ffcecb;
+}
+
+/* Disabled send button style for clarity */
+#email-button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* Case template helpers */
+.case-paragraph { 
+  font-size: 1.1rem; 
+  line-height: 1.5; 
+  margin: calc(20px + 10 * ((100vw - 320px) / 680));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Banner position utilities (non-breaking) --- */
+.client-banner.pos-center   { object-position: center center; }
+.client-banner.pos-top      { object-position: center top; }
+.client-banner.pos-bottom   { object-position: center bottom; }
+.client-banner.pos-left     { object-position: left center; }
+.client-banner.pos-right    { object-position: right center; }
+
+.case-hero {
+  margin: 0;        /* prevent unintended spacing */
+  position: relative;
+  width: 100vw;
+  height: 500px;
+  overflow: hidden;
+}
+.case-hero .client-banner { width: 100%; height: 100%; object-fit: cover; }
+.case-hero .client-description {
+  position: absolute; top: 50% !important; left: 50%;
+  transform: translate(-50%, -50%); margin: 0;
+}
+
 

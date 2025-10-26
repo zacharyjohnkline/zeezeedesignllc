@@ -1,9 +1,9 @@
+
 'use strict';
 function caseLinks(event) {
-    window.removeEventListener("wheel", listening);
-    console.log(event.target);
-    if (event.target.alt === "weveel") {
-      container.style.gridTemplateRows = "1fr";
-      container.innerHTML = weveel;
-    }
-  }
+  try{ removeScrollInputs(); }catch(e){}
+  const el = event.target;
+  const slug = (el && el.alt) ? el.alt.toLowerCase() : '';
+  if (!slug) return;
+  renderCase(slug);
+}
