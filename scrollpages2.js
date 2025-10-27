@@ -28,7 +28,7 @@ const scrollPages2 = [
     {
       name: "boxes",
       content: "<img src='./images/weveel_ss.jpg' alt='boxes' class='banner-image'>",
-      tagline: `We print graphic boxes on a variety of substrates. Have a custom dieline? No problem! We can handle any dieline you need with our advanced box‑cutting tech. Our prototype boxes have helped sell countless products to major retailers around the globe. You will not be disappointed.
+      tagline: `We print graphic boxes on a variety of substrates. Have a custom dieline? No problem! We can handle any dieline you need with our advanced box‑cutting tech.
                 Minimum order: 3 boxes.`,
     },
     {
