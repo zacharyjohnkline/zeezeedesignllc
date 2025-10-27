@@ -87,7 +87,7 @@ body {
 }
 #tagline {
   position: absolute;
-  top: 30%;
+  top: 40%;
   left: 50%;
   transition: opacity 0.15s;
   transform: translate(-50%, -50%);
