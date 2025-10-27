@@ -7,28 +7,28 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <script>
-    (function lockToVisualViewport(){
-      function set() {
-        const vv = window.visualViewport;
-        const h  = vv ? vv.height : window.innerHeight;   // usable, visible pixels
-        // Write both px and a vh-like unit for convenience
-        document.documentElement.style.setProperty('--vvh',  h + 'px');
-        document.documentElement.style.setProperty('--vh1', (h * 0.01) + 'px');
-      }
-      set();
+    <!-- <script>
+      (function lockToVisualViewport(){
+        function set() {
+          const vv = window.visualViewport;
+          const h  = vv ? vv.height : window.innerHeight;   // usable, visible pixels
+          // Write both px and a vh-like unit for convenience
+          document.documentElement.style.setProperty('--vvh',  h + 'px');
+          document.documentElement.style.setProperty('--vh1', (h * 0.01) + 'px');
+        }
+        set();
 
-      if (window.visualViewport) {
-        // Chrome/Android & iOS Safari fire these as bars show/hide and on rotate
-        visualViewport.addEventListener('resize', set);
-        visualViewport.addEventListener('scroll', set);   // address-bar show/hide sometimes reports as "scroll"
-      } else {
-        // Fallback
-        window.addEventListener('resize', set);
-        window.addEventListener('orientationchange', set);
-      }
-    })();
-    </script>
+        if (window.visualViewport) {
+          // Chrome/Android & iOS Safari fire these as bars show/hide and on rotate
+          visualViewport.addEventListener('resize', set);
+          visualViewport.addEventListener('scroll', set);   // address-bar show/hide sometimes reports as "scroll"
+        } else {
+          // Fallback
+          window.addEventListener('resize', set);
+          window.addEventListener('orientationchange', set);
+        }
+      })();
+    </script> -->
 
     <div class="container">
     </div>
