@@ -22,5 +22,5 @@ const homeHTML = `
 const homeTagline = `
       <div class="tagline">
         <p id="tagline">Turn your packaging concepts into reality.<br><br><span id="scroll-span">Scroll to see our process!</span></p>
-        <div class="contact-us"><p onclick="contactPage(event)" id="6">contact us</p><p onclick="casePage(event)" id="4">case studies</div
+        <div class="contact-us"><p onclick="contactPage(event)" id="6">contact us</p><p onclick="casePage(event)" id="4">case studies</p></div
       </div>`;

@@ -61,6 +61,7 @@ function renderCase(slug) {
   container.style.gridTemplateRows = "";
   container.style.display = "block";
   container.innerHTML = parts.join('\n');
+  if (typeof setScrollEnabled === 'function') setScrollEnabled(true);
   const paragraphBG = document.querySelector(".client-description");
   paragraphBG.style.backgroundColor = `${data.color}`;
 }

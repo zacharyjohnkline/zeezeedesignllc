@@ -11,6 +11,15 @@
 // console.log("Is Mobile:", isMobile);
 // console.log("Is Tablet:", isTablet);
 // console.log("Is Desktop:", isDesktop);
+/* --- add near your top-level helpers --- */
+function setScrollEnabled(on) {
+  if (on) {
+    document.body.classList.add('scroll-enabled');
+  } else {
+    document.body.classList.remove('scroll-enabled');
+    window.scrollTo(0, 0); // don’t leave the doc scrolled when turning off
+  }
+}
 
 //DEFINE UNIVERSAL VARIABLES
 const container = document.querySelector(".container");
@@ -52,6 +61,8 @@ function goBack() {
   // 2) Restore the base home structure
   //    (containerHTML should be your saved initial markup for the home view)
   root.innerHTML = containerHTML;
+
+  setScrollEnabled(false);
 
   // 3) Restore grid rows (guarded)
   if (root && root.style) {

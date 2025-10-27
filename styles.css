@@ -538,7 +538,7 @@ body {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  padding: 15px;
+  padding: 15px 15px 30px 15px;
   background-color: black;
   width: 100%;
   color: white;
@@ -551,4 +551,21 @@ body {
 
 #scroll-span{
   color: rgb(187, 187, 187);
+}
+
+/* --- scroll ONLY when viewing a case DETAIL --- */
+body.scroll-enabled {
+  overflow-y: auto;                 /* enables scroll so Chrome bar can hide */
+  overscroll-behavior-y: contain;   /* avoids PTR bubbling */
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0) + 24px);
+}
+
+/* when scrolling, let the content define the height; still respect viewport min */
+body.scroll-enabled .container {
+  height: auto;                     /* allow the page to grow */
+  min-height: var(--vvh, 100svh);   /* don’t go shorter than the visible vp */
+  max-height: none;
+  overflow: visible;
+  touch-action: pan-y;              /* vertical scroll gestures allowed */
 }
