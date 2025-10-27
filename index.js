@@ -1,92 +1,4 @@
 "use strict";
-
-// === Mobile & unified scroll helpers ===
-let touchStartY = 0;
-let touchStartX = 0;
-let lastTouchY = 0;
-const SWIPE_Y_THRESHOLD = 28;
-const SWIPE_X_TOLERANCE = 22;
-const TOUCH_GAIN = 45;
-const SCROLL_INVERT_WHEEL = 1; // wheel natural
-const SCROLL_INVERT_TOUCH = -1; // reverse touch to feel natural
-
-function onWheel(e) {
-  const deltaY = (e.wheelDeltaY || -e.deltaY || 0) * SCROLL_INVERT_WHEEL;
-  listening({ wheelDeltaY: deltaY });
-};
-
-
-function onTouchStart(e) {
-  if (!e.touches || e.touches.length === 0) return;
-  touchStartY = lastTouchY = e.touches[0].clientY;
-  touchStartX = e.touches[0].clientX;
-}
-
-function onTouchMove(e) {
-  if (!e.touches || e.touches.length === 0) return;
-  const y = e.touches[0].clientY;
-  const x = e.touches[0].clientX;
-  const absX = Math.abs(x - touchStartX);
-  const absY = Math.abs(y - touchStartY);
-  if (absX > SWIPE_X_TOLERANCE && absX > absY) return;
-  const dy = (lastTouchY - y);
-  lastTouchY = y;
-  if (Math.abs(y - touchStartY) < SWIPE_Y_THRESHOLD) return;
-  const deltaY = dy * TOUCH_GAIN * SCROLL_INVERT_TOUCH;
-  // feed into legacy wheel handler
-  listening({ wheelDeltaY: deltaY });
-  // prevent browser rubber-banding while we're handling it
-  try { e.preventDefault(); } catch (_) {}
-}
-
-function addScrollInputs() {
-  window.addEventListener("wheel", onWheel, { passive: true });
-  window.addEventListener("touchstart", onTouchStart, { passive: true });
-  window.addEventListener("touchmove", onTouchMove, { passive: false });
-}
-
-function removeScrollInputs() {
-  window.removeEventListener("wheel", onWheel);
-  window.removeEventListener("touchstart", onTouchStart);
-  window.removeEventListener("touchmove", onTouchMove);
-}
-
-// === Dynamic viewport & nav height support ===
-(function setupViewportVars(){
-  const docEl = document.documentElement;
-  function computeNavH() {
-    // try common ids/classes; fall back to 0
-    const cand = document.getElementById('topnav')
-              || document.querySelector('[data-role="topnav"]')
-              || document.querySelector('nav[role="navigation"]')
-              || document.querySelector('header[role="banner"]')
-              || document.querySelector('nav.topnav')
-              || null;
-    const h = cand ? Math.round(cand.getBoundingClientRect().height) : 0;
-    docEl.style.setProperty('--nav-h', h + 'px');
-  }
-  function computeVH() {
-    // prefer 100svh when supported; fallback to window.innerHeight
-    const vh = window.innerHeight;
-    docEl.style.setProperty('--app-safe-vh', vh + 'px');
-  }
-  computeNavH();
-  computeVH();
-  window.addEventListener('resize', () => { computeNavH(); computeVH(); });
-  window.addEventListener('orientationchange', () => { computeNavH(); computeVH(); });
-})();
-
-// === Helper to jump to the Email page ===
-function goToEmail(){
-  try{
-    const idx = (scrollPages || []).findIndex(p => p && p.name === 'email');
-    if (idx >= 0) {
-      page = idx;
-      slideInOut('left', scrollPages);
-    }
-  }catch(e){ console.error('goToEmail error', e); }
-}
-
 // const userAgent = navigator.userAgent;
 
 // const isMobile =
@@ -133,10 +45,7 @@ function goBack() {
   if (!root) {
     console.error('[goBack] .container not found');
     return;
-  
-  try { removeScrollInputs(); } catch(e){}
-  addScrollInputs();
-}
+  }
   root.style.display = "grid";
   root.style.gridTemplateRows = "1.5fr 0.5fr 1fr";
 
@@ -162,10 +71,8 @@ function goBack() {
     ${cases.content}
   `;
   topContainer.innerHTML = pageHTML;
-        const _cbtn = document.getElementById('contact-btn');
-        if (_cbtn) { _cbtn.addEventListener('click', goToEmail); }
   service.innerText = cases.name;
-  tagline.innerHTML = cases.tagline;
+  tagline.innerText = cases.tagline;
 
   // 6) Reset nav state
   pageArray = scrollPages;
@@ -291,14 +198,8 @@ function slideInOut(direction, array) {
         tagline.style.opacity = "1";
         topContainer.style.opacity = "1";
         service.innerText = pageArray[page].name;
-        if (pageArray[page].name === 'design') {
-          tagline.innerHTML = (typeof homeTagline !== 'undefined') ? homeTagline : pageArray[page].tagline;
-        } else {
-          tagline.innerHTML = pageArray[page].tagline;
-        }
+        tagline.innerText = pageArray[page].tagline;
         topContainer.innerHTML = pageHTML;
-        const _cbtn = document.getElementById('contact-btn');
-        if (_cbtn) { _cbtn.addEventListener('click', goToEmail); }
       }, 150);
     }, 50);
   }
@@ -316,18 +217,12 @@ function slideInOut(direction, array) {
         tagline.style.opacity = "1";
         topContainer.style.opacity = "1";
         service.innerText = pageArray[page].name;
-        if (pageArray[page].name === 'design') {
-          tagline.innerHTML = (typeof homeTagline !== 'undefined') ? homeTagline : pageArray[page].tagline;
-        } else {
-          tagline.innerHTML = pageArray[page].tagline;
-        }
+        tagline.innerText = pageArray[page].tagline;
         if (page <= 0) {
           page = 0;
           container.innerHTML = containerHTML;
         } else {
           topContainer.innerHTML = pageHTML;
-        const _cbtn = document.getElementById('contact-btn');
-        if (_cbtn) { _cbtn.addEventListener('click', goToEmail); }
         }
       }, 150);
     }, 50);
@@ -358,7 +253,7 @@ function listening(event) {
   if(page === 0){
     pageArray = scrollPages;
   }
-  let deltaY = (event && typeof event.wheelDeltaY === 'number' ? event.wheelDeltaY : 0);
+  let deltaY = event.wheelDeltaY;
   if (page >= pageArray.length - 1 && deltaY <= 0) {
     listeningToWheel = false;
   } else if (page >= pageArray.length - 1 && deltaY >= 0) {
@@ -402,19 +297,15 @@ function servicePage(event){
   page = servicePage;
   slideInOut("left", scrollPages2);
 }
-
 function contactPage(event){
   let contactPage = event.target.id;
-  console.log(contactPage);
   page = contactPage;
-  slideInOut("left", scrollPages)
+  slideInOut("left", scrollPages);
 }
-
 function casePage(event){
   let casePage = event.target.id;
-  console.log(casePage);
   page = casePage;
-  slideInOut("left", scrollPages)
+  slideInOut("left", scrollPages);
 }
 
 function goHome(){
@@ -423,9 +314,76 @@ function goHome(){
 }
 
 //APPLY WHEEL EVENT
-function listener(){
-  addScrollInputs();
+function listener() {
+  window.addEventListener("wheel", listening);
 }
 
 //INITIALIZE THE WHEEL LISTENER
 listener();
+/* ===== MOBILE TOUCH: forward-only paging ===== */
+(function initMobileForwardOnly(){
+  let touchStartY = 0;
+  let touchStartX = 0;
+  let gestureArmed = false;
+
+  // how much finger travel counts as a swipe
+  const SWIPE_THRESHOLD = 45;       // px
+  const MAX_X_DEVIATION = 60;       // ignore mostly-horizontal swipes
+
+  function triggerForward() {
+    // only advance if there is a next page and we're allowed
+    if (page < pageArray.length - 1 && listeningToWheel) {
+      listeningToWheel = false;
+      page++;
+      slideInOut("left", pageArray);
+      position = 1500;
+      // same cooldown you already use for wheel
+      setTimeout(() => { listeningToWheel = true; }, 1000);
+    }
+  }
+
+  function onTouchStart(e) {
+    if (!e.touches || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    touchStartY = t.clientY;
+    touchStartX = t.clientX;
+    gestureArmed = true;
+  }
+
+  function onTouchMove(e) {
+    if (!gestureArmed) return;
+
+    const t = e.touches[0];
+    const dy = touchStartY - t.clientY;        // >0 means finger moved up (page forward)
+    const dx = Math.abs(t.clientX - touchStartX);
+
+    // Ignore mostly-horizontal gestures (e.g., carousels)
+    if (dx > MAX_X_DEVIATION) return;
+
+    if (dy > SWIPE_THRESHOLD) {
+      // Forward swipe -> advance a page
+      triggerForward();
+      gestureArmed = false;
+      // prevent scroll/ptr glow
+      e.preventDefault();
+      return;
+    }
+
+    if (dy < -SWIPE_THRESHOLD) {
+      // Backward swipe -> BLOCK (do nothing) but prevent rubber-band/PTR
+      e.preventDefault();
+      return;
+    }
+    // small moves: do nothing
+  }
+
+  function onTouchEnd() {
+    gestureArmed = false;
+  }
+
+  // Attach listeners
+  window.addEventListener('touchstart', onTouchStart, { passive: true });
+  // passive:false so we *can* preventDefault() to stop PTR/bounce
+  window.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  window.addEventListener('touchend',   onTouchEnd,   { passive: true });
+})();
