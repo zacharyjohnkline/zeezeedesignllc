@@ -47,9 +47,9 @@ const scrollPages2 = [
       tagline: `We also have extensive experience creating custom dielines to match your project needs. If you want the ability to alter dimensions on your custom dieline, ask us about our Adobe scripting pricing. We'll script it—you'll have it forever to reuse, saving countless hours of daily design time.`,
     },
     {
-      name: "3D printing",
+      name: "3D",
       content: "<img src='./images/3dprinting2.webp' alt='3dprinting' class='banner-image'>",
-      tagline: `We offer fast, affordable 3D printing solutions for all kinds of product prototypes.  Utilizing both FDM and UV resin printers, we have years of experience bringing product concepts to life through 3D printing.`,
+      tagline: `We offer fast, affordable 3D printing solutions for all kinds of product prototypes.  FDM or resin printing? No problem!`,
     },
     {
       name: "consulting",
