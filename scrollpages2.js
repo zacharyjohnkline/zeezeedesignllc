@@ -44,7 +44,7 @@ const scrollPages2 = [
     {
       name: "dielines",
       content: "<img src='./images/dielines.jpg' alt='dielines' class='banner-image'>",
-      tagline: `We also have extensive experience creating custom dielines to match your project needs. If you want the ability to alter dimensions on your custom dieline, ask us about our Adobe scripting pricing. We'll script it—you'll have it forever to reuse, saving countless hours of daily design time.`,
+      tagline: `We also have extensive experience creating custom dielines to match your project needs. If you want the ability to alter dimensions on your custom dieline, ask us about our Adobe scripting pricing.`,
     },
     {
       name: "3D",
