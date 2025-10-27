@@ -21,20 +21,24 @@
 html {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .container {
   position: absolute;
   left: 0;
   width: 100vw;
-  /* respect dynamic mobile viewport + any fixed top nav */
-  top: var(--nav-h, 0px);
-  height: calc(var(--app-safe-vh, 100dvh) - var(--nav-h, 0px));
-  min-height: calc(var(--app-safe-vh, 100dvh) - var(--nav-h, 0px));
+  height: calc(var(--vh1, 1vh) * 100);           /* live visual height, falls back to 100svh */
+  max-height: var(--vvh, 100svh);
   display: grid;
   grid-template-rows: 1.5fr 0.5fr 1fr;
-  overflow-x: hidden;
-  overscroll-behavior: none;
-  touch-action: pan-y;
+  overflow: clip;
+  touch-action: none;
 }
 #zeezee {
   align-self: flex-end;
