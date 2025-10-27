@@ -72,7 +72,7 @@ function goBack() {
   `;
   topContainer.innerHTML = pageHTML;
   service.innerText = cases.name;
-  tagline.innerText = cases.tagline;
+  tagline.innerHTML = cases.tagline;
 
   // 6) Reset nav state
   pageArray = scrollPages;
@@ -198,7 +198,7 @@ function slideInOut(direction, array) {
         tagline.style.opacity = "1";
         topContainer.style.opacity = "1";
         service.innerText = pageArray[page].name;
-        tagline.innerText = pageArray[page].tagline;
+        tagline.innerHTML = pageArray[page].tagline;
         topContainer.innerHTML = pageHTML;
       }, 150);
     }, 50);
@@ -217,7 +217,7 @@ function slideInOut(direction, array) {
         tagline.style.opacity = "1";
         topContainer.style.opacity = "1";
         service.innerText = pageArray[page].name;
-        tagline.innerText = pageArray[page].tagline;
+        tagline.innerHTML = pageArray[page].tagline;
         if (page <= 0) {
           page = 0;
           container.innerHTML = containerHTML;
